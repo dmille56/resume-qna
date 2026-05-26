@@ -1,14 +1,49 @@
 # Resume Q&A Skill
 
-Standalone flake installer for an AI skill that answers questions from a resume.
+Resume Q&A skill for OpenCode and Pi, with both declarative Nix install and a simple non-Nix fallback.
 
-## Install
+## Nix install
 
 ```bash
 nix run .#install
 ```
 
-## Configure
+### Home Manager
+
+```nix
+{ inputs, ... }:
+{
+  imports = [ inputs.resume-qna.homeManagerModules.resume-qna ];
+
+  resumeQna = {
+    enable = true;
+    resumePath = "/home/you/path/to/resume.pdf";
+  };
+}
+```
+
+### NixOS
+
+```nix
+{ inputs, ... }:
+{
+  imports = [ inputs.resume-qna.nixosModules.resume-qna ];
+
+  resumeQna = {
+    enable = true;
+    user = "you";
+    resumePath = "/home/you/path/to/resume.pdf";
+  };
+}
+```
+
+## Non-Nix install
+
+```bash
+./install-resume-qna.sh
+```
+
+## Configure the resume path
 
 Edit the installed file:
 

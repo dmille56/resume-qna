@@ -63,6 +63,18 @@
         };
       });
 
+      homeManagerModules = {
+        resume-qna = args@{ pkgs, ... }: import ./modules/home-manager.nix (args // {
+          skillPackage = self.packages.${pkgs.system}.resume-qna;
+        });
+      };
+
+      nixosModules = {
+        resume-qna = args@{ pkgs, ... }: import ./modules/nixos.nix (args // {
+          skillPackage = self.packages.${pkgs.system}.resume-qna;
+        });
+      };
+
       formatter = forAllSystems (pkgs: pkgs.alejandra);
     };
 }

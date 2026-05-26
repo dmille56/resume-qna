@@ -6,6 +6,10 @@ let
   destDir = if cfg.installDir != null then cfg.installDir else "${homeDir}/.agents/skills/resume-qna";
   seedPath = if cfg.resumePath == null then "CHANGE_ME" else cfg.resumePath;
   seedStrictness = cfg.strictness;
+  targetGroup = if cfg.user != "" then config.users.users.${cfg.user}.group else null;
+  chownCommand = lib.optionalString (cfg.user != "") ''
+      chown -R ${lib.escapeShellArg cfg.user}:${lib.escapeShellArg targetGroup} "$dest"
+'';
 in
 {
   options.resumeQna = {
@@ -65,6 +69,7 @@ in
 
       chmod u+w "$dest/config/resume-path.txt" 2>/dev/null || true
       chmod u+w "$dest/config/strictness.txt" 2>/dev/null || true
-    '';
+${chownCommand}
+    ''; 
   };
 }

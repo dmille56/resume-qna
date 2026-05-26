@@ -1,4 +1,4 @@
-{ lib, config, pkgs, skillPackage }:
+{ lib, config, skillPackage }:
 
 let
   cfg = config.resumeQna;

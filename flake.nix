@@ -70,15 +70,19 @@
       });
 
       homeManagerModules = {
-        resume-qna = args@{ pkgs, ... }: import ./modules/home-manager.nix (args // {
-          skillPackage = self.packages.${pkgs.system}.resume-qna;
-        });
+        resume-qna = { lib, config, pkgs, ... }:
+          import ./modules/home-manager.nix {
+            inherit lib config;
+            skillPackage = self.packages.${pkgs.system}.resume-qna;
+          };
       };
 
       nixosModules = {
-        resume-qna = args@{ pkgs, ... }: import ./modules/nixos.nix (args // {
-          skillPackage = self.packages.${pkgs.system}.resume-qna;
-        });
+        resume-qna = { lib, config, pkgs, ... }:
+          import ./modules/nixos.nix {
+            inherit lib config;
+            skillPackage = self.packages.${pkgs.system}.resume-qna;
+          };
       };
 
       formatter = forAllSystems (pkgs: pkgs.alejandra);

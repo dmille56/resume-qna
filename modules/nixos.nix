@@ -47,6 +47,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    environment.sessionVariables.PATH = lib.mkAfter [ "${pkgs.poppler}/bin" ];
     environment.profiles = lib.mkAfter [ "${pkgs.poppler}" ];
 
     assertions = [

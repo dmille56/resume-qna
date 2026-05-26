@@ -10,13 +10,15 @@ metadata:
 # Resume Q&A
 
 ## Source of truth
-- Read the resume path from `config/resume-path.txt`.
-- If the file is missing, empty, or still contains `CHANGE_ME`, ask the user to set the path before answering.
+- Read the resume path from `config/resume-path.txt` first.
+- If that local file is missing, empty, or still contains `CHANGE_ME`, fall back to `~/.agents/skills/resume-qna/config/resume-path.txt`.
+- If both are missing, empty, or still contain `CHANGE_ME`, ask the user to set the path before answering.
 - Read only the resume content when answering. Do not invent details or rely on memory.
 
 ## Strictness
-- Read the strictness setting from `config/strictness.txt`.
-- If the file is missing, empty, or contains an unrecognized value, treat it as `Moderate`.
+- Read the strictness setting from `config/strictness.txt` first.
+- If that local file is missing, empty, or contains an unrecognized value, fall back to `~/.agents/skills/resume-qna/config/strictness.txt`.
+- If both are missing, empty, or unrecognized, treat it as `Moderate`.
 - Valid values are `Strict`, `Moderate`, and `Loose`.
 - `Strict`: only use facts stated directly in the resume. If the resume does not support the answer, say so plainly.
 - `Moderate`: stay tightly grounded in the resume, and only make small, clearly supported inferences.

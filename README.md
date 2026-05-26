@@ -53,6 +53,8 @@ Edit the installed file:
 
 Put the path to your resume there.
 
+The skill reads the bundled local config first, then falls back to the installed global copy at `~/.agents/skills/resume-qna/config/resume-path.txt`.
+
 ## Configure strictness
 
 Edit:
@@ -62,6 +64,8 @@ Edit:
 ```
 
 Use one of `Strict`, `Moderate`, or `Loose`. Default is `Moderate`.
+
+The skill reads the bundled local config first, then falls back to the installed global copy at `~/.agents/skills/resume-qna/config/strictness.txt`.
 
 ## Use
 

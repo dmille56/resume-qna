@@ -7,6 +7,7 @@ TARGET_DIR="$HOME/.agents/skills/resume-qna"
 
 mkdir -p "$TARGET_DIR/config"
 cp "$SOURCE_DIR/SKILL.md" "$TARGET_DIR/SKILL.md"
+chmod u+w "$TARGET_DIR/SKILL.md" 2>/dev/null || true
 
 if [ ! -e "$TARGET_DIR/config/resume-path.txt" ]; then
   cp "$SOURCE_DIR/config/resume-path.txt" "$TARGET_DIR/config/resume-path.txt"

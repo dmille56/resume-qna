@@ -30,6 +30,7 @@
             dest="$HOME/.agents/skills/resume-qna"
             mkdir -p "$dest"
             cp "${skill}/share/resume-qna/SKILL.md" "$dest/SKILL.md"
+            chmod u+w "$dest/SKILL.md" 2>/dev/null || true
             mkdir -p "$dest/config"
 
             if [ ! -e "$dest/config/resume-path.txt" ]; then

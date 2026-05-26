@@ -48,8 +48,13 @@ in
         rm -rf "$dest"
       fi
 
+      if [ -e "$dest/SKILL.md" ] && [ ! -w "$dest/SKILL.md" ]; then
+        rm -f "$dest/SKILL.md"
+      fi
+
       mkdir -p "$dest/config"
       cp ${lib.escapeShellArg "${skillPackage}/share/resume-qna/SKILL.md"} "$dest/SKILL.md"
+      chmod u+w "$dest/SKILL.md" 2>/dev/null || true
 
       printf '%s\n' "$resumePathValue" > "$dest/config/resume-path.txt"
       printf '%s\n' "$strictnessValue" > "$dest/config/strictness.txt"

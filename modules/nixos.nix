@@ -56,8 +56,12 @@ in
 
     system.activationScripts.resumeQna.text = ''
       dest=${lib.escapeShellArg destDir}
+      if [ -e "$dest/SKILL.md" ] && [ ! -w "$dest/SKILL.md" ]; then
+        rm -f "$dest/SKILL.md"
+      fi
       mkdir -p "$dest/config"
       cp ${lib.escapeShellArg "${skillPackage}/share/resume-qna/SKILL.md"} "$dest/SKILL.md"
+      chmod u+w "$dest/SKILL.md" 2>/dev/null || true
 
       if [ ! -e "$dest/config/resume-path.txt" ] || [ "$(cat "$dest/config/resume-path.txt")" = "CHANGE_ME" ]; then
         printf '%s\n' ${lib.escapeShellArg seedPath} > "$dest/config/resume-path.txt"

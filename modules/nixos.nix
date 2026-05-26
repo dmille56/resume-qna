@@ -1,4 +1,4 @@
-{ lib, config, skillPackage }:
+{ lib, config, pkgs, skillPackage }:
 
 let
   cfg = config.resumeQna;
@@ -47,6 +47,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    environment.systemPackages = lib.mkAfter [ pkgs.poppler ];
+
     assertions = [
       {
         assertion = cfg.user != "" || cfg.homeDirectory != null;

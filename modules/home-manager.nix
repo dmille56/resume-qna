@@ -1,4 +1,4 @@
-{ lib, config, skillPackage }:
+{ lib, config, pkgs, skillPackage }:
 
 let
   cfg = config.resumeQna;
@@ -30,6 +30,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    home.packages = lib.mkAfter [ pkgs.poppler ];
+
     home.activation.resumeQna = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       dest=${lib.escapeShellArg destDir}
 

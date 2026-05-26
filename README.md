@@ -53,6 +53,9 @@ Edit the installed file:
 
 Put the path to your resume there.
 
+PDF resumes are supported. If you use the Nix modules, `pdftotext` from Poppler is installed for you.
+If you use the shell installer, make sure `pdftotext` is available in `PATH` first.
+
 The skill reads the bundled local config first, then falls back to the installed global copy at `~/.agents/skills/resume-qna/config/resume-path.txt`.
 
 ## Configure strictness

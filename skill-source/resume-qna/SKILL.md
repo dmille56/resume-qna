@@ -13,6 +13,7 @@ metadata:
 - Read the resume path from `config/resume-path.txt` first.
 - If that local file is missing, empty, or still contains `CHANGE_ME`, fall back to `~/.agents/skills/resume-qna/config/resume-path.txt`.
 - If both are missing, empty, or still contain `CHANGE_ME`, ask the user to set the path before answering.
+- The configured resume may be a text file or a PDF.
 - Read only the resume content when answering. Do not invent details or rely on memory.
 
 ## Strictness
@@ -41,5 +42,6 @@ metadata:
 
 ## Workflow
 1. Load the configured resume file.
-2. Extract the facts needed to answer the question.
-3. Write a concise response that a hiring manager would find credible and easy to read.
+2. If it is a PDF, extract the text with `pdftotext -layout <resume-path> -` before answering.
+3. Extract the facts needed to answer the question.
+4. Write a concise response that a hiring manager would find credible and easy to read.

@@ -73,7 +73,7 @@
       homeManagerModules = {
         resume-qna = { lib, config, pkgs, ... }:
           import ./modules/home-manager.nix {
-            inherit lib config;
+            inherit lib config pkgs;
             skillPackage = self.packages.${pkgs.system}.resume-qna;
           };
       };
@@ -81,7 +81,7 @@
       nixosModules = {
         resume-qna = { lib, config, pkgs, ... }:
           import ./modules/nixos.nix {
-            inherit lib config;
+            inherit lib config pkgs;
             skillPackage = self.packages.${pkgs.system}.resume-qna;
           };
       };

@@ -30,6 +30,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    home.packages = lib.mkAfter [ pkgs.poppler ];
+
     home.sessionPath = lib.mkAfter [ "${pkgs.poppler}/bin" ];
 
     home.activation.resumeQna = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

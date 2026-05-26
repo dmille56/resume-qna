@@ -53,6 +53,16 @@ Edit the installed file:
 
 Put the path to your resume there.
 
+## Configure strictness
+
+Edit:
+
+```bash
+~/.agents/skills/resume-qna/config/strictness.txt
+```
+
+Use one of `Strict`, `Moderate`, or `Loose`. Default is `Moderate`.
+
 ## Use
 
 - OpenCode loads skills from `.agents/skills`

@@ -4,6 +4,7 @@ description: Answers questions from a user's resume with concise, natural, hirin
 compatibility: opencode, pi
 metadata:
   resume_path_file: config/resume-path.txt
+  strictness_file: config/strictness.txt
 ---
 
 # Resume Q&A
@@ -12,6 +13,14 @@ metadata:
 - Read the resume path from `config/resume-path.txt`.
 - If the file is missing, empty, or still contains `CHANGE_ME`, ask the user to set the path before answering.
 - Read only the resume content when answering. Do not invent details or rely on memory.
+
+## Strictness
+- Read the strictness setting from `config/strictness.txt`.
+- If the file is missing, empty, or contains an unrecognized value, treat it as `Moderate`.
+- Valid values are `Strict`, `Moderate`, and `Loose`.
+- `Strict`: only use facts stated directly in the resume. If the resume does not support the answer, say so plainly.
+- `Moderate`: stay tightly grounded in the resume, and only make small, clearly supported inferences.
+- `Loose`: allow more natural rewriting and synthesis of resume facts, but never add new facts.
 
 ## Answer style
 - Default to 2-3 sentences.
@@ -24,6 +33,7 @@ metadata:
 ## Response rules
 - Be accurate before being polished.
 - Do not add achievements, titles, dates, technologies, or outcomes that are not in the resume.
+- Match the requested strictness level when deciding how much to infer, condense, or rephrase.
 - If the user asks for a longer answer, expand only as much as needed.
 - If the question is outside the resume, answer with the closest supported fact and note the gap.
 

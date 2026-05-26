@@ -36,10 +36,16 @@
               cp "${skill}/share/resume-qna/config/resume-path.txt" "$dest/config/resume-path.txt"
             fi
 
+            if [ ! -e "$dest/config/strictness.txt" ]; then
+              cp "${skill}/share/resume-qna/config/strictness.txt" "$dest/config/strictness.txt"
+            fi
+
             chmod u+w "$dest/config/resume-path.txt" 2>/dev/null || true
+            chmod u+w "$dest/config/strictness.txt" 2>/dev/null || true
 
             printf '%s\n' "Installed resume-qna to $dest"
             printf '%s\n' "Edit $dest/config/resume-path.txt to point at your resume."
+            printf '%s\n' "Edit $dest/config/strictness.txt to set the answer strictness."
           '';
         };
     in

@@ -5,6 +5,7 @@ let
   homeDir = if cfg.homeDirectory != null then cfg.homeDirectory else config.users.users.${cfg.user}.home;
   destDir = if cfg.installDir != null then cfg.installDir else "${homeDir}/.agents/skills/resume-qna";
   seedPath = if cfg.resumePath == null then "CHANGE_ME" else cfg.resumePath;
+  seedStrictness = cfg.strictness;
 in
 {
   options.resumeQna = {
@@ -33,6 +34,12 @@ in
       default = null;
       description = "Initial resume path written to config/resume-path.txt if it does not already exist.";
     };
+
+    strictness = lib.mkOption {
+      type = lib.types.enum [ "Strict" "Moderate" "Loose" ];
+      default = "Moderate";
+      description = "Initial strictness written to config/strictness.txt if it does not already exist.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -52,7 +59,12 @@ in
         printf '%s\n' ${lib.escapeShellArg seedPath} > "$dest/config/resume-path.txt"
       fi
 
+      if [ ! -e "$dest/config/strictness.txt" ]; then
+        printf '%s\n' ${lib.escapeShellArg seedStrictness} > "$dest/config/strictness.txt"
+      fi
+
       chmod u+w "$dest/config/resume-path.txt" 2>/dev/null || true
+      chmod u+w "$dest/config/strictness.txt" 2>/dev/null || true
     '';
   };
 }

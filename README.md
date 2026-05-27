@@ -70,6 +70,33 @@ Use one of `Strict`, `Moderate`, or `Loose`. Default is `Moderate`.
 
 The skill reads the bundled local config first, then falls back to the installed global copy at `~/.agents/skills/resume-qna/config/strictness.txt`.
 
+## Optional job text
+
+You can optionally paste job text directly into the same request when you want the answer tailored to a role.
+If you do not have job text, just ask the question normally.
+The text is not saved anywhere.
+
+Recommended prompt format:
+
+Example:
+
+```text
+Job text: (optional)
+<paste the job description here>
+
+Question:
+How would my background fit this role?
+```
+
+Or, without job text:
+
+```text
+Question:
+How would my background fit this role?
+```
+
+The skill uses pasted job text only as temporary context and still treats your resume as the source of truth.
+
 ## Use
 
 - OpenCode loads skills from `.agents/skills`

@@ -16,6 +16,14 @@ metadata:
 - The configured resume may be a text file or a PDF.
 - Read only the resume content when answering. Do not invent details or rely on memory.
 
+## Optional job context
+- The user may optionally paste job text directly in the request.
+- Treat that pasted text as temporary context for this answer only. Do not store it or expect it in config.
+- Use it to tailor emphasis, phrasing, and relevance to the role.
+- Do not treat job text as facts about the candidate.
+- If no job text is provided, answer from the resume alone.
+- Prefer an explicit label like `Job text:` so the intent is clear.
+
 ## Strictness
 - Read the strictness setting from `config/strictness.txt` first.
 - If that local file is missing, empty, or contains an unrecognized value, fall back to `~/.agents/skills/resume-qna/config/strictness.txt`.
@@ -43,5 +51,6 @@ metadata:
 ## Workflow
 1. Load the configured resume file.
 2. If it is a PDF, extract the text with `pdftotext -layout <resume-path> -` before answering.
-3. Extract the facts needed to answer the question.
-4. Write a concise response that a hiring manager would find credible and easy to read.
+3. If the current request includes a labeled `Job text:` block, read it as optional context.
+4. Extract the facts needed to answer the question.
+5. Write a concise response that a hiring manager would find credible and easy to read.

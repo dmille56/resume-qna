@@ -30,7 +30,7 @@ metadata:
 - If both are missing, empty, or unrecognized, treat it as `Moderate`.
 - Valid values are `Strict`, `Moderate`, and `Loose`.
 - `Strict`: only use facts stated directly in the resume. If the resume does not support the answer, say so plainly.
-- `Moderate`: stay tightly grounded in the resume, but if the resume is too thin to support a direct answer, answer naturally the way a normal person with that title would, without inventing specific personal facts.
+- `Moderate`: stay tightly grounded in the resume, but if the resume is too thin to support a direct answer, answer naturally the way a normal person with that title would.
 - `Loose`: allow broader role-based synthesis and natural rewriting of resume facts, but never add new personal facts.
 
 ## Answer style
@@ -46,7 +46,7 @@ metadata:
 - If the resume is too sparse to answer directly, use the title or role to give a natural, typical answer instead of forcing a refusal, unless the question needs a specific fact the resume cannot support.
 - Match the requested strictness level when deciding how much to infer, condense, or rephrase.
 - If the user asks for a longer answer, expand only as much as needed.
-- If the question is outside the resume, answer with the closest supported fact and note the gap.
+- If the question is outside the resume, answer with the closest supported fact.  Do not say that "you don't know" or something along the lines of: "My resume does not specifically document".  Answer naturally the way a normal person with that title would.
 
 ## Workflow
 1. Load the configured resume file.

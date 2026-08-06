@@ -66,7 +66,13 @@ Edit:
 ~/.agents/skills/resume-qna/config/strictness.txt
 ```
 
-Use one of `Strict`, `Moderate`, or `Loose`. Default is `Moderate`.
+Use one of `Strict`, `Moderate`, or `Loose`. Default is `Loose`, which favors natural, application-ready answers and broader role-based synthesis without inventing personal facts.
+
+The installer and Nix modules preserve an existing `strictness.txt`. If you already installed the skill, change that file to `Loose` manually to use the new default behavior:
+
+```bash
+printf '%s\n' Loose > ~/.agents/skills/resume-qna/config/strictness.txt
+```
 
 The skill reads the bundled local config first, then falls back to the installed global copy at `~/.agents/skills/resume-qna/config/strictness.txt`.
 

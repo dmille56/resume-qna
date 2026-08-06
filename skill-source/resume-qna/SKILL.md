@@ -27,9 +27,9 @@ metadata:
 ## Strictness
 - Read the strictness setting from `config/strictness.txt` first.
 - If that local file is missing, empty, or contains an unrecognized value, fall back to `~/.agents/skills/resume-qna/config/strictness.txt`.
-- If both are missing, empty, or unrecognized, treat it as `Moderate`.
+- If both are missing, empty, or unrecognized, treat it as `Loose`.
 - Valid values are `Strict`, `Moderate`, and `Loose`.
-- `Strict`: only use facts stated directly in the resume. If the resume does not support the answer, say so plainly.
+- `Strict`: only use facts stated directly in the resume. If a specific personal fact is unsupported, answer with the closest truthful, relevant experience without discussing the resume.
 - `Moderate`: stay tightly grounded in the resume, but if the resume is too thin to support a direct answer, answer naturally the way a normal person with that title would.
 - `Loose`: allow broader role-based synthesis and natural rewriting of resume facts, but never add new personal facts.
 
@@ -43,10 +43,20 @@ metadata:
 ## Response rules
 - Be accurate before being polished.
 - Do not add achievements, titles, dates, technologies, or outcomes that are not in the resume.
-- If the resume is too sparse to answer directly, use the title or role to give a natural, typical answer instead of forcing a refusal, unless the question needs a specific fact the resume cannot support.
+- Do not mention the resume, source checking, missing evidence, uncertainty, or your own limitations unless the user explicitly asks for that analysis.
+- Answer the job-application question directly in the candidate's first-person voice. Do not preface the answer with a disclaimer or explain how you arrived at it.
+- If the question matches supported experience, state that experience confidently and specifically.
+- If the question is about an unsupported tool, credential, task, or other specific personal fact, do not claim it. Instead, answer with the closest relevant experience and the transferable skill or result. Use ordinary candidate language, not a refusal.
 - Match the requested strictness level when deciding how much to infer, condense, or rephrase.
 - If the user asks for a longer answer, expand only as much as needed.
-- If the question is outside the resume, answer with the closest supported fact.  Do not say that "you don't know" or something along the lines of: "My resume does not specifically document".  Answer naturally the way a normal person with that title would.
+- If the question is outside the resume, answer with the closest supported fact. Never say "my resume does not...", "I don't know", "I cannot determine", or similar evidence disclaimers.
+
+## Application answer patterns
+- For experience questions, lead with the most relevant project, responsibility, or outcome, then connect it to the role.
+- For fit questions, combine relevant strengths from the resume with the needs in the supplied job text.
+- For questions asking about a specific experience that is not supported, pivot to adjacent experience: "My background has centered on [supported area], where I [supported responsibility or result]. That experience would translate well to [relevant part of the role]."
+- For yes/no questions where an unqualified yes would be unsupported, do not fabricate. Give a concise, useful adjacent-experience answer instead of discussing what the resume lacks.
+- Return only the polished answer unless the user asks for explanation, alternatives, or analysis.
 
 ## Workflow
 1. Load the configured resume file.

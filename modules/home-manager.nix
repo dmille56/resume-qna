@@ -24,7 +24,7 @@ in
 
     strictness = lib.mkOption {
       type = lib.types.enum [ "Strict" "Moderate" "Loose" ];
-      default = "Moderate";
+      default = "Loose";
       description = "Initial strictness written to config/strictness.txt if it does not already exist.";
     };
   };

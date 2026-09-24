@@ -78,17 +78,26 @@ The skill reads the bundled local config first, then falls back to the installed
 
 ## Optional job text
 
-You can optionally paste job text directly into the same request when you want the answer tailored to a role.
+You can optionally paste job text directly or provide a URL to the job posting when you want the answer tailored to a role. The skill will retrieve the posting when a browsing or web-fetching tool is available. If the page cannot be accessed or requires a login, paste the job text instead.
 If you do not have job text, just ask the question normally.
-The text is not saved anywhere.
+Job text is used only as temporary context and is not saved anywhere.
 
 Recommended prompt format:
 
 Example:
 
 ```text
-Job text: (optional)
+Job text: (optional; use this or Job URL)
 <paste the job description here>
+
+Question:
+How would my background fit this role?
+```
+
+Or provide a posting URL:
+
+```text
+Job URL: https://example.com/jobs/role
 
 Question:
 How would my background fit this role?

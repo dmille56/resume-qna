@@ -30,9 +30,9 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = lib.mkAfter [ pkgs.poppler ];
+    home.packages = lib.mkAfter [ pkgs.poppler-utils ];
 
-    home.sessionPath = lib.mkAfter [ "${pkgs.poppler}/bin" ];
+    home.sessionPath = lib.mkAfter [ "${pkgs.poppler-utils}/bin" ];
 
     home.activation.resumeQna = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       dest=${lib.escapeShellArg destDir}

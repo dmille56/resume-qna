@@ -47,7 +47,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.poppler ];
+    environment.systemPackages = [ pkgs.poppler-utils ];
 
     assertions = [
       {

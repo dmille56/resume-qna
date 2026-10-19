@@ -4,6 +4,7 @@ let
   cfg = config.resumeQna;
   destDir = cfg.installDir;
   seedPath = if cfg.resumePath == null then "CHANGE_ME" else cfg.resumePath;
+  seedJsonPath = if cfg.resumeJsonPath == null then "CHANGE_ME" else cfg.resumeJsonPath;
   seedStrictness = cfg.strictness;
 in
 {
@@ -22,6 +23,12 @@ in
       description = "Initial resume path written to config/resume-path.txt if it does not already exist.";
     };
 
+    resumeJsonPath = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Initial JSON resume path written to config/resume-json-path.txt if it does not already exist.";
+    };
+
     strictness = lib.mkOption {
       type = lib.types.enum [ "Strict" "Moderate" "Loose" ];
       default = "Loose";
@@ -38,10 +45,15 @@ in
       dest=${lib.escapeShellArg destDir}
 
       resumePathValue=${lib.escapeShellArg seedPath}
+      resumeJsonPathValue=${lib.escapeShellArg seedJsonPath}
       strictnessValue=${lib.escapeShellArg seedStrictness}
 
       if [ -e "$dest/config/resume-path.txt" ]; then
         IFS= read -r resumePathValue < "$dest/config/resume-path.txt" || true
+      fi
+
+      if [ -e "$dest/config/resume-json-path.txt" ]; then
+        IFS= read -r resumeJsonPathValue < "$dest/config/resume-json-path.txt" || true
       fi
 
       if [ -e "$dest/config/strictness.txt" ]; then
@@ -61,9 +73,11 @@ in
       chmod u+w "$dest/SKILL.md" 2>/dev/null || true
 
       printf '%s\n' "$resumePathValue" > "$dest/config/resume-path.txt"
+      printf '%s\n' "$resumeJsonPathValue" > "$dest/config/resume-json-path.txt"
       printf '%s\n' "$strictnessValue" > "$dest/config/strictness.txt"
 
       chmod u+w "$dest/config/resume-path.txt" 2>/dev/null || true
+      chmod u+w "$dest/config/resume-json-path.txt" 2>/dev/null || true
       chmod u+w "$dest/config/strictness.txt" 2>/dev/null || true
     '';
   };

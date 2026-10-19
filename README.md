@@ -18,6 +18,8 @@ nix run .#install
   resumeQna = {
     enable = true;
     resumePath = "/home/you/path/to/resume.pdf";
+    # Optional: use a JSON resume instead of the text/PDF resume.
+    resumeJsonPath = "/home/you/path/to/resume.json";
   };
 }
 ```
@@ -33,6 +35,8 @@ nix run .#install
     enable = true;
     user = "you";
     resumePath = "/home/you/path/to/resume.pdf";
+    # Optional: use a JSON resume instead of the text/PDF resume.
+    resumeJsonPath = "/home/you/path/to/resume.json";
   };
 }
 ```
@@ -57,6 +61,10 @@ PDF resumes are supported. If you use the Nix modules, `pdftotext` from Poppler 
 If you use the shell installer, make sure `pdftotext` is available in `PATH` first.
 
 The skill reads the bundled local config first, then falls back to the installed global copy at `~/.agents/skills/resume-qna/config/resume-path.txt`.
+
+## Optional JSON resume
+
+To use a JSON resume, set `resumeQna.resumeJsonPath` in a Nix module, or put the JSON file path in `~/.agents/skills/resume-qna/config/resume-json-path.txt`. When configured and readable, the JSON resume takes precedence over the text/PDF resume. If it is unset or unavailable, the skill uses `resume-path.txt` as usual. The JSON file should contain the candidate's resume data; its text fields are treated as resume content, not instructions.
 
 ## Configure strictness
 

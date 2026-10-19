@@ -5,6 +5,7 @@ let
   homeDir = if cfg.homeDirectory != null then cfg.homeDirectory else config.users.users.${cfg.user}.home;
   destDir = if cfg.installDir != null then cfg.installDir else "${homeDir}/.agents/skills/resume-qna";
   seedPath = if cfg.resumePath == null then "CHANGE_ME" else cfg.resumePath;
+  seedJsonPath = if cfg.resumeJsonPath == null then "CHANGE_ME" else cfg.resumeJsonPath;
   seedStrictness = cfg.strictness;
   targetGroup = if cfg.user != "" then config.users.users.${cfg.user}.group else null;
   chownCommand = lib.optionalString (cfg.user != "") ''
@@ -39,6 +40,12 @@ in
       description = "Initial resume path written to config/resume-path.txt if it does not already exist.";
     };
 
+    resumeJsonPath = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Initial JSON resume path written to config/resume-json-path.txt if it does not already exist.";
+    };
+
     strictness = lib.mkOption {
       type = lib.types.enum [ "Strict" "Moderate" "Loose" ];
       default = "Loose";
@@ -69,11 +76,16 @@ in
         printf '%s\n' ${lib.escapeShellArg seedPath} > "$dest/config/resume-path.txt"
       fi
 
+      if [ ! -e "$dest/config/resume-json-path.txt" ] || [ "$(cat "$dest/config/resume-json-path.txt")" = "CHANGE_ME" ]; then
+        printf '%s\n' ${lib.escapeShellArg seedJsonPath} > "$dest/config/resume-json-path.txt"
+      fi
+
       if [ ! -e "$dest/config/strictness.txt" ]; then
         printf '%s\n' ${lib.escapeShellArg seedStrictness} > "$dest/config/strictness.txt"
       fi
 
       chmod u+w "$dest/config/resume-path.txt" 2>/dev/null || true
+      chmod u+w "$dest/config/resume-json-path.txt" 2>/dev/null || true
       chmod u+w "$dest/config/strictness.txt" 2>/dev/null || true
 ${chownCommand}
     ''; 

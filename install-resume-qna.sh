@@ -13,6 +13,10 @@ if [ ! -e "$TARGET_DIR/config/resume-path.txt" ]; then
   cp "$SOURCE_DIR/config/resume-path.txt" "$TARGET_DIR/config/resume-path.txt"
 fi
 
+if [ ! -e "$TARGET_DIR/config/resume-json-path.txt" ]; then
+  cp "$SOURCE_DIR/config/resume-json-path.txt" "$TARGET_DIR/config/resume-json-path.txt"
+fi
+
 printf '%s\n' "If your resume is a PDF, make sure pdftotext (Poppler) is installed and on PATH."
 
 if [ ! -e "$TARGET_DIR/config/strictness.txt" ]; then

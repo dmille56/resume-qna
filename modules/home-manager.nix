@@ -2,7 +2,8 @@
 
 let
   cfg = config.resumeQna;
-  destDir = cfg.installDir;
+  destDirs = if cfg.installDir != null then [ cfg.installDir ] else
+    map (target: "${config.home.homeDirectory}/.${target}/skills/resume-qna") cfg.installTargets;
   seedPath = if cfg.resumePath == null then "CHANGE_ME" else cfg.resumePath;
   seedJsonPath = if cfg.resumeJsonPath == null then "CHANGE_ME" else cfg.resumeJsonPath;
   seedStrictness = cfg.strictness;
@@ -12,9 +13,15 @@ in
     enable = lib.mkEnableOption "resume Q&A skill";
 
     installDir = lib.mkOption {
-      type = lib.types.str;
-      default = "${config.home.homeDirectory}/.agents/skills/resume-qna";
-      description = "Directory where the skill is installed.";
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Override the installation directory. When set, installTargets is ignored.";
+    };
+
+    installTargets = lib.mkOption {
+      type = lib.types.listOf (lib.types.enum [ "agents" "claude" ]);
+      default = [ "agents" "claude" ];
+      description = "Agent skill directories to install into. Choose agents, claude, or both.";
     };
 
     resumePath = lib.mkOption {
@@ -42,43 +49,31 @@ in
     home.sessionPath = lib.mkAfter [ "${pkgs.poppler-utils}/bin" ];
 
     home.activation.resumeQna = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      dest=${lib.escapeShellArg destDir}
-
-      resumePathValue=${lib.escapeShellArg seedPath}
-      resumeJsonPathValue=${lib.escapeShellArg seedJsonPath}
-      strictnessValue=${lib.escapeShellArg seedStrictness}
-
-      if [ -e "$dest/config/resume-path.txt" ]; then
-        IFS= read -r resumePathValue < "$dest/config/resume-path.txt" || true
-      fi
-
-      if [ -e "$dest/config/resume-json-path.txt" ]; then
-        IFS= read -r resumeJsonPathValue < "$dest/config/resume-json-path.txt" || true
-      fi
-
-      if [ -e "$dest/config/strictness.txt" ]; then
-        IFS= read -r strictnessValue < "$dest/config/strictness.txt" || true
-      fi
-
-      if [ -d "$dest" ] && [ ! -w "$dest" ]; then
-        rm -rf "$dest"
-      fi
-
-      if [ -e "$dest/SKILL.md" ] && [ ! -w "$dest/SKILL.md" ]; then
-        rm -f "$dest/SKILL.md"
-      fi
-
-      mkdir -p "$dest/config"
-      cp ${lib.escapeShellArg "${skillPackage}/share/resume-qna/SKILL.md"} "$dest/SKILL.md"
-      chmod u+w "$dest/SKILL.md" 2>/dev/null || true
-
-      printf '%s\n' "$resumePathValue" > "$dest/config/resume-path.txt"
-      printf '%s\n' "$resumeJsonPathValue" > "$dest/config/resume-json-path.txt"
-      printf '%s\n' "$strictnessValue" > "$dest/config/strictness.txt"
-
-      chmod u+w "$dest/config/resume-path.txt" 2>/dev/null || true
-      chmod u+w "$dest/config/resume-json-path.txt" 2>/dev/null || true
-      chmod u+w "$dest/config/strictness.txt" 2>/dev/null || true
+      for dest in ${lib.escapeShellArgs destDirs}; do
+        resumePathValue=${lib.escapeShellArg seedPath}
+        resumeJsonPathValue=${lib.escapeShellArg seedJsonPath}
+        strictnessValue=${lib.escapeShellArg seedStrictness}
+        if [ -e "$dest/config/resume-path.txt" ]; then
+          IFS= read -r resumePathValue < "$dest/config/resume-path.txt" || true
+        fi
+        if [ -e "$dest/config/resume-json-path.txt" ]; then
+          IFS= read -r resumeJsonPathValue < "$dest/config/resume-json-path.txt" || true
+        fi
+        if [ -e "$dest/config/strictness.txt" ]; then
+          IFS= read -r strictnessValue < "$dest/config/strictness.txt" || true
+        fi
+        if [ -d "$dest" ] && [ ! -w "$dest" ]; then rm -rf "$dest"; fi
+        if [ -e "$dest/SKILL.md" ] && [ ! -w "$dest/SKILL.md" ]; then rm -f "$dest/SKILL.md"; fi
+        mkdir -p "$dest/config"
+        cp ${lib.escapeShellArg "${skillPackage}/share/resume-qna/SKILL.md"} "$dest/SKILL.md"
+        chmod u+w "$dest/SKILL.md" 2>/dev/null || true
+        printf '%s\n' "$resumePathValue" > "$dest/config/resume-path.txt"
+        printf '%s\n' "$resumeJsonPathValue" > "$dest/config/resume-json-path.txt"
+        printf '%s\n' "$strictnessValue" > "$dest/config/strictness.txt"
+        chmod u+w "$dest/config/resume-path.txt" 2>/dev/null || true
+        chmod u+w "$dest/config/resume-json-path.txt" 2>/dev/null || true
+        chmod u+w "$dest/config/strictness.txt" 2>/dev/null || true
+      done
     '';
   };
 }

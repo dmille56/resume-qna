@@ -1,12 +1,26 @@
 # Resume Q&A Skill
 
-Resume Q&A skill for OpenCode and Pi, with both declarative Nix install and a simple non-Nix fallback.
+Resume Q&A skill for Claude Code, OpenCode, and Pi, with declarative Nix install and a simple non-Nix fallback.
 
 ## Nix install
 
 ```bash
 nix run .#install
 ```
+
+For Claude Code, use its personal skills directory:
+
+```bash
+nix run .#install-claude
+```
+
+In Home Manager or NixOS, select one or both install locations with `resumeQna.installTargets`:
+
+```nix
+resumeQna.installTargets = [ "agents" "claude" ];
+```
+
+The default is `[ "agents" "claude" ]`. Set `resumeQna.installTargets = [ "agents" ];` or `[ "claude" ];` to install in only one directory. Setting `resumeQna.installDir` continues to support a custom single directory and takes precedence over `installTargets`.
 
 ### Home Manager
 
@@ -45,6 +59,12 @@ nix run .#install
 
 ```bash
 ./install-resume-qna.sh
+```
+
+For Claude Code:
+
+```bash
+./install-resume-qna.sh --claude
 ```
 
 ## Configure the resume path
@@ -124,5 +144,6 @@ The skill uses pasted job text only as temporary context and still treats your r
 
 - OpenCode loads skills from `.agents/skills`
 - Pi loads skills from `.agents/skills`
+- Claude Code loads personal skills from `~/.claude/skills`
 
-After install, load `resume-qna` in either agent and ask your question.
+After install, load `resume-qna` in your agent and ask your question.

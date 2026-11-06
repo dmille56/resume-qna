@@ -3,7 +3,8 @@
 let
   cfg = config.resumeQna;
   homeDir = if cfg.homeDirectory != null then cfg.homeDirectory else config.users.users.${cfg.user}.home;
-  destDir = if cfg.installDir != null then cfg.installDir else "${homeDir}/.agents/skills/resume-qna";
+  destDirs = if cfg.installDir != null then [ cfg.installDir ] else
+    map (target: "${homeDir}/.${target}/skills/resume-qna") cfg.installTargets;
   seedPath = if cfg.resumePath == null then "CHANGE_ME" else cfg.resumePath;
   seedJsonPath = if cfg.resumeJsonPath == null then "CHANGE_ME" else cfg.resumeJsonPath;
   seedStrictness = cfg.strictness;
@@ -31,7 +32,13 @@ in
     installDir = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
-      description = "Override the installation directory for the skill.";
+      description = "Override the installation directory. When set, installTargets is ignored.";
+    };
+
+    installTargets = lib.mkOption {
+      type = lib.types.listOf (lib.types.enum [ "agents" "claude" ]);
+      default = [ "agents" "claude" ];
+      description = "Agent skill directories to install into. Choose agents, claude, or both.";
     };
 
     resumePath = lib.mkOption {
@@ -64,30 +71,25 @@ in
     ];
 
     system.activationScripts.resumeQna.text = ''
-      dest=${lib.escapeShellArg destDir}
-      if [ -e "$dest/SKILL.md" ] && [ ! -w "$dest/SKILL.md" ]; then
-        rm -f "$dest/SKILL.md"
-      fi
-      mkdir -p "$dest/config"
-      cp ${lib.escapeShellArg "${skillPackage}/share/resume-qna/SKILL.md"} "$dest/SKILL.md"
-      chmod u+w "$dest/SKILL.md" 2>/dev/null || true
-
-      if [ ! -e "$dest/config/resume-path.txt" ] || [ "$(cat "$dest/config/resume-path.txt")" = "CHANGE_ME" ]; then
-        printf '%s\n' ${lib.escapeShellArg seedPath} > "$dest/config/resume-path.txt"
-      fi
-
-      if [ ! -e "$dest/config/resume-json-path.txt" ] || [ "$(cat "$dest/config/resume-json-path.txt")" = "CHANGE_ME" ]; then
-        printf '%s\n' ${lib.escapeShellArg seedJsonPath} > "$dest/config/resume-json-path.txt"
-      fi
-
-      if [ ! -e "$dest/config/strictness.txt" ]; then
-        printf '%s\n' ${lib.escapeShellArg seedStrictness} > "$dest/config/strictness.txt"
-      fi
-
-      chmod u+w "$dest/config/resume-path.txt" 2>/dev/null || true
-      chmod u+w "$dest/config/resume-json-path.txt" 2>/dev/null || true
-      chmod u+w "$dest/config/strictness.txt" 2>/dev/null || true
+      for dest in ${lib.escapeShellArgs destDirs}; do
+        if [ -e "$dest/SKILL.md" ] && [ ! -w "$dest/SKILL.md" ]; then rm -f "$dest/SKILL.md"; fi
+        mkdir -p "$dest/config"
+        cp ${lib.escapeShellArg "${skillPackage}/share/resume-qna/SKILL.md"} "$dest/SKILL.md"
+        chmod u+w "$dest/SKILL.md" 2>/dev/null || true
+        if [ ! -e "$dest/config/resume-path.txt" ] || [ "$(cat "$dest/config/resume-path.txt")" = "CHANGE_ME" ]; then
+          printf '%s\n' ${lib.escapeShellArg seedPath} > "$dest/config/resume-path.txt"
+        fi
+        if [ ! -e "$dest/config/resume-json-path.txt" ] || [ "$(cat "$dest/config/resume-json-path.txt")" = "CHANGE_ME" ]; then
+          printf '%s\n' ${lib.escapeShellArg seedJsonPath} > "$dest/config/resume-json-path.txt"
+        fi
+        if [ ! -e "$dest/config/strictness.txt" ]; then
+          printf '%s\n' ${lib.escapeShellArg seedStrictness} > "$dest/config/strictness.txt"
+        fi
+        chmod u+w "$dest/config/resume-path.txt" 2>/dev/null || true
+        chmod u+w "$dest/config/resume-json-path.txt" 2>/dev/null || true
+        chmod u+w "$dest/config/strictness.txt" 2>/dev/null || true
 ${chownCommand}
+      done
     ''; 
   };
 }

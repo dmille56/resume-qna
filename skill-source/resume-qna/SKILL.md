@@ -1,7 +1,7 @@
 ---
 name: resume-qna
 description: Answers questions from a user's resume with concise, natural, hiring-manager-friendly responses. Use when the user asks about their background, experience, fit, or interview prep based on their resume.
-compatibility: opencode, pi
+compatibility: claude-code, opencode, pi
 metadata:
   resume_path_file: config/resume-path.txt
   resume_json_path_file: config/resume-json-path.txt

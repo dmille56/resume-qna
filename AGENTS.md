@@ -8,6 +8,7 @@
 - The skill reads local config first, then falls back to `~/.agents/skills/resume-qna/config/*`.
 - PDF resumes need `pdftotext -layout`; Nix modules add Poppler to PATH, but `install-resume-qna.sh` does not.
 - `resumeQna.user` or `resumeQna.homeDirectory` must be set for the NixOS module.
-- Install or verify with `nix run .#install` or `./install-resume-qna.sh`.
+- Install for OpenCode/Pi with `nix run .#install` or `./install-resume-qna.sh`.
+- Install for Claude Code with `nix run .#install-claude` or `./install-resume-qna.sh --claude`.
 - Format with `nix fmt`.
 - There is no repo-local CI, test runner, or task file in this repository.

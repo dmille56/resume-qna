@@ -1,5 +1,5 @@
 {
-  description = "Resume Q&A skill for OpenCode and Pi";
+  description = "Resume Q&A skill for Claude Code, OpenCode, and Pi";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -20,14 +20,14 @@
           cp -R ${./skill-source/resume-qna}/. "$out/share/resume-qna/"
         '';
 
-      mkInstaller = pkgs: skill:
+      mkInstaller = pkgs: skill: target:
         pkgs.writeShellApplication {
-          name = "install-resume-qna";
+          name = "install-resume-qna${if target == "claude" then "-claude" else ""}";
           runtimeInputs = [ pkgs.coreutils ];
           text = ''
             set -eu
 
-            dest="$HOME/.agents/skills/resume-qna"
+            dest="$HOME/${if target == "claude" then ".claude" else ".agents"}/skills/resume-qna"
             mkdir -p "$dest"
             cp "${skill}/share/resume-qna/SKILL.md" "$dest/SKILL.md"
             chmod u+w "$dest/SKILL.md" 2>/dev/null || true
@@ -64,7 +64,8 @@
 
       apps = forAllSystems (pkgs: let
         skill = mkSkill pkgs;
-        installer = mkInstaller pkgs skill;
+        installer = mkInstaller pkgs skill "agents";
+        claudeInstaller = mkInstaller pkgs skill "claude";
       in {
         default = {
           type = "app";
@@ -73,6 +74,10 @@
         install = {
           type = "app";
           program = "${installer}/bin/install-resume-qna";
+        };
+        install-claude = {
+          type = "app";
+          program = "${claudeInstaller}/bin/install-resume-qna-claude";
         };
       });
 
